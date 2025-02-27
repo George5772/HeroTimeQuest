@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 input; //hold x value and y value
     private Animator animator;
     public LayerMask fenchLayer;
+    public LayerMask NPCLayer;
+    public LayerMask HouseLayer;
     // as soon as load player, proggram will run this
     private void Awake()
     {
@@ -47,6 +50,22 @@ public class PlayerController : MonoBehaviour
             }
         }
         animator.SetBool("isMoving", isMoving);
+        if (Input.GetKeyDown(KeyCode.E) == true)
+        {
+            Interact();
+        }
+    }
+    void Interact()
+    {
+        var facingDr = new Vector3(animator.GetFloat("moveX"), animator.GetFloat("moveY"));
+        var interactPos = transform.position + facingDr;
+        Debug.Log("Drawing line from " + transform.position + " to " + interactPos);
+        Debug.DrawLine(transform.position, interactPos, Color.red, 5f);
+        var collider = Physics2D.OverlapCircle(interactPos, 0.2f, NPCLayer);
+        if (collider != null)
+        {
+            Debug.Log("there is an NPC Here");
+        }
     }
     // coroutines are used to perform actions over a period of time.
     // They are particularly useful for animations, waiting for a certain condition, or handling timed events.
@@ -75,7 +94,7 @@ public class PlayerController : MonoBehaviour
     }
     private bool IsWalkable(Vector3 targetPos)
     {
-        if (Physics2D.OverlapCircle(targetPos, 0.2f, fenchLayer) != null)
+        if (Physics2D.OverlapCircle(targetPos, 0.2f, fenchLayer | NPCLayer | HouseLayer) != null)
         {
             return false;
         }
