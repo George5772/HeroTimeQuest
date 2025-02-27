@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private bool isMoving; //check if user are moving?
     private Vector2 input; //hold x value and y value
     private Animator animator;
+    public LayerMask fenchLayer;
     // as soon as load player, proggram will run this
     private void Awake()
     {
@@ -37,7 +38,12 @@ public class PlayerController : MonoBehaviour
                 var targetPos = transform.position;
                 targetPos.x += input.x;
                 targetPos.y += input.y;
-                StartCoroutine(Move(targetPos));
+                if (IsWalkable(targetPos))
+                {
+                    StartCoroutine(Move(targetPos));
+
+                }
+           
             }
         }
         animator.SetBool("isMoving", isMoving);
@@ -66,5 +72,13 @@ public class PlayerController : MonoBehaviour
         }
         transform.position = targetPos;
         isMoving = false;
+    }
+    private bool IsWalkable(Vector3 targetPos)
+    {
+        if (Physics2D.OverlapCircle(targetPos, 0.2f, fenchLayer) != null)
+        {
+            return false;
+        }
+        return true;
     }
 }
