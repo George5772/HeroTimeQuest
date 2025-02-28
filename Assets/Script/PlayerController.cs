@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     public LayerMask fenchLayer;
     public LayerMask NPCLayer;
-    public LayerMask HouseLayer;
     // as soon as load player, proggram will run this
     private void Awake()
     {
@@ -94,7 +93,7 @@ public class PlayerController : MonoBehaviour
     }
     private bool IsWalkable(Vector3 targetPos)
     {
-        if (Physics2D.OverlapCircle(targetPos, 0.2f, fenchLayer | NPCLayer | HouseLayer) != null)
+        if (Physics2D.OverlapCircle(targetPos, 0.2f, fenchLayer | NPCLayer) != null)
         {
             return false;
         }
